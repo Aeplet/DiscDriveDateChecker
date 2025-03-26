@@ -7,11 +7,17 @@
 #include <di/di.h>
 
 // Local Files
-#include "libpatcher.h"
-#include "patches.h"
+#include "globals.h"
+#include "ios.h"
 
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
+
+void return_to_loader()
+{
+	printf("\n\nExiting...");
+	exit(0);
+}
 
 void get_drive_date(char *drivedate) {
     DI_Init(); // Requires ahbprot access
@@ -28,7 +34,9 @@ void get_drive_date(char *drivedate) {
 //---------------------------------------------------------------------------------
 int main(int argc, char **argv) {
 //---------------------------------------------------------------------------------
-	if (!apply_patches()) {
+	// we might need to have a bit of fun with IOS!
+	if (!disable_ahbprot())
+	{
 		sleep(5);
 		return -1;
 	}
@@ -74,16 +82,17 @@ int main(int argc, char **argv) {
 	// e.g. printf ("\x1b[%d;%dH", row, column );
 	printf("\x1b[2;0H");
 
-	printf("Wii Disc Drive Date Checker by Aep v1.0.0\n");
+	printf("Wii Disc Drive Date Checker by Aep %s\n", VERSION);
 	printf("Press HOME (or START on GameCube Controller) to exit.\n\n");
 
 	char drivedate[11] = {0};
-    get_drive_date(drivedate);
-    if (drivedate[0]) {
-        printf("Drive Date: %s\n", drivedate);
+	get_drive_date(drivedate);
+
+	if (drivedate[0]) {
+		printf("Drive Date: %s\n", drivedate);
 	}
 	else {
-		printf("Could not get the drive date? Is the disc drive plugged into the Wii?");
+		printf("Could not get the drive date! Is the disc drive plugged into the Wii?\nReport this on the GitHub issues page.");
 	}
 	
 	while(1) {
@@ -98,7 +107,7 @@ int main(int argc, char **argv) {
 		u32 pressed = WPAD_ButtonsDown(0);
 
 		// We return to the launcher application via exit
-		if ( pressed & WPAD_BUTTON_HOME || pressed_gc & PAD_BUTTON_START ) exit(0);
+		if ( pressed & WPAD_BUTTON_HOME || pressed_gc & PAD_BUTTON_START ) return_to_loader();
 
 		// Wait for the next frame
 		VIDEO_WaitVSync();
