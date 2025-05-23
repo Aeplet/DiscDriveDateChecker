@@ -9,6 +9,8 @@
 // Local Files
 #include "globals.h"
 #include "ios.h"
+#include "disc_drive.h"
+#include "wii.h"
 
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
@@ -17,18 +19,6 @@ void return_to_loader()
 {
 	printf("\n\nExiting...");
 	exit(0);
-}
-
-void get_drive_date(char *drivedate) {
-    DI_Init(); // Requires ahbprot access
-    DI_DriveID id;
-    if (DI_Identify(&id) == 0)
-    {
-        char temp[9] = {0};
-        sprintf(temp, "%08x", id.rel_date);
-        sprintf(drivedate, "%.4s/%.2s/%.2s", temp, temp + 4, temp + 6); // ISO 8601 format
-    }
-    DI_Close();
 }
 
 //---------------------------------------------------------------------------------
@@ -92,8 +82,20 @@ int main(int argc, char **argv) {
 		printf("Drive Date: %s\n", drivedate);
 	}
 	else {
-		printf("Could not get the drive date! Is the disc drive plugged into the Wii?\nReport this on the GitHub issues page.");
+		printf("Could not get the drive date! Is the disc drive plugged into the Wii?\nReport this on the GitHub issues page.\n");
 	}
+
+	// This info was added to make sharing console drive dates with their serial numbers and model numbers easier. (Serial and model number)
+	char model_number[13];
+	get_wii_model(model_number);
+	printf("Model Number: %s\n", model_number);
+
+	char serial_number[13]; // 11 or 12 characters
+	get_wii_serial_number(serial_number);
+	printf("Serial Number: %s\n", serial_number);
+
+	// This had to be added because people were confusing this with a production date.
+	printf("\nThe date provided is not a production date for the disc drive.\nWii disc drives have different revisions, and they all have different drive\ndates in their drive firmware for each revision.\nSwapping the disc drive does affect this date if the drive you swap\nit with is not the same revision.");
 	
 	while(1) {
 

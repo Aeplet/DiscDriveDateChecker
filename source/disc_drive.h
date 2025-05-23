@@ -1,0 +1,1 @@
+void get_drive_date(char *drivedate);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <app version="1"> 
     <name>Disc Drive Date Checker</name>  
-    <version>1.0.1</version>  
+    <version>1.0.2</version>  
     <coder>Aep</coder>  
     <short_description>Check your Wii's Disc Drive Date</short_description>  
     <long_description>This app will get you the date of your Wii's disc drive. Source code available at https://github.com/Aeplexi/DiscDriveDateChecker</long_description>  
