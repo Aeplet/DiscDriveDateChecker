@@ -31,23 +31,10 @@ static const u32 stage1[] = {
     0xE12FFF1E, // bx  lr
 };
 
-bool is_dolphin()
-{
-    // /dev/dolphin will never exist in an official IOS
-    s32 fd = IOS_Open("/dev/dolphin", 0);
-    if (fd >= 0)
-    {
-        IOS_Close(fd);
-        return true;
-    }
-    IOS_Close(fd);
-    return false;
-}
-
 // time to exploit /dev/sha!
 bool disable_ahbprot()
 {
-    if (AHBPROT_DISABLED || is_dolphin()) {
+    if (AHBPROT_DISABLED) {
         return true; // AHBPROT is already disabled, likely via launching through HBC or the user is using Dolphin. Dolphin always has it disabled however :)
     }
 
