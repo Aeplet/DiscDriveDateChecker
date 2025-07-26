@@ -82,7 +82,9 @@ int main(int argc, char **argv) {
 	get_drive_date(drivedate);
 
 	if (drivedate[0]) {
+		u8 dvd_compatible = is_dvd_compatible();
 		printf("Drive Date: %s\n", drivedate);
+		printf("DVD Compatible: %s\n", (dvd_compatible == 2) ? "Maybe" : (dvd_compatible == 1) ? "No" : (dvd_compatible == 0) ? "Yes" : "Unknown?" );
 	}
 	else {
 		printf("Could not get the drive date! Is the disc drive plugged into the Wii?\nReport this on the GitHub issues page.\n");
