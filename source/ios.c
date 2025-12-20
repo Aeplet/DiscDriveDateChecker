@@ -1,15 +1,34 @@
-#include <stdint.h>
+/*
+MIT License
+
+Copyright (c) 2025 Aep
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 #include <string.h>
-#include <malloc.h>
 #include <unistd.h>
 
-// Local files
-#include "globals.h"
-
-// libogc files
-#include <ogc/machine/processor.h>
+// libogc file
 #include <ogc/ipc.h>
-#include <ogc/cache.h>
+
+#define AHBPROT_DISABLED			(*(vu32*)0xcd800064 == 0xFFFFFFFF)
 
 static const u32 stage0[] = {
     0x4903468D,	/* ldr r1, =0x10100000; mov sp, r1; */
@@ -31,11 +50,11 @@ static const u32 stage1[] = {
     0xE12FFF1E, // bx  lr
 };
 
-// time to exploit /dev/sha!
+// Run the /dev/sha (Starlet ACE) exploit here to disable AHBPROT. This must be done this way because only Starlet can access the AHBPROT register.
 bool disable_ahbprot()
 {
     if (AHBPROT_DISABLED) {
-        return true; // AHBPROT is already disabled, likely via launching through HBC or the user is using Dolphin. Dolphin always has it disabled however :)
+        return true;
     }
 
     u32 *const mem1 = (u32 *)0x80000000;

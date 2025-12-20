@@ -83,6 +83,11 @@ int main(int argc, char **argv) {
 
 	if (drivedate[0]) {
 		u8 dvd_compatible = is_dvd_compatible();
+
+		char drive_revision[DRIVE_REVISION_MAX_LENGTH];
+		get_drive_revision(drive_revision);
+
+		printf("Drive Revision: %s\n", drive_revision);
 		printf("Drive Date: %s\n", drivedate);
 		printf("DVD Compatible: %s\n", (dvd_compatible == 2) ? "Maybe" : (dvd_compatible == 1) ? "No" : (dvd_compatible == 0) ? "Yes" : "Unknown?" );
 	}
@@ -100,7 +105,8 @@ int main(int argc, char **argv) {
 	printf("Serial Number: %s\n", serial_number);
 
 	// This had to be added because people were confusing this with a production date.
-	printf("\nThe date provided is not a production date for the disc drive.\nWii disc drives have different revisions, and they all have different drive\ndates in their drive firmware for each revision.\nSwapping the disc drive does affect this date if the drive you swap\nit with is not the same revision.");
+	// should this be in multiple lines at this point?
+	printf("\nThe date provided is not a production date for the disc drive.\nWii disc drives have different revisions, and they all have different drive\ndates in their drive firmware for each revision.\nSwapping the disc drive does affect this date if the drive you swap\nit with is not the same revision.\n\nPlease ideally report any unknown drive revisions on the GitHub issues page.");
 	
 	while(1) {
 
