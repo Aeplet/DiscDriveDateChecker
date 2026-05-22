@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <gccore.h>
 #include <ogc/pad.h>
@@ -75,12 +76,12 @@ int main(int argc, char **argv) {
 	printf("Press HOME (or START on GameCube Controller) to exit.\n\n");
 
 	char drivedate[11] = {0};
+	char drive_revision[DRIVE_REVISION_MAX_LENGTH];
 	get_drive_date(drivedate);
 
 	if (drivedate[0]) {
 		u8 dvd_compatible = is_dvd_compatible();
 
-		char drive_revision[DRIVE_REVISION_MAX_LENGTH];
 		get_drive_revision(drive_revision);
 
 		printf("Drive Revision: %s\n", drive_revision);
@@ -102,7 +103,11 @@ int main(int argc, char **argv) {
 
 	// This had to be added because people were confusing this with a production date.
 	// should this be in multiple lines at this point?
-	printf("\nThe date provided is not a production date for the disc drive.\nWii disc drives have different revisions, and they all have different drive\ndates in their drive firmware for each revision.\nSwapping the disc drive does affect this date if the drive you swap\nit with is not the same revision.\n\nPlease ideally report any unknown drive revisions on the GitHub issues page.");
+	printf("\nThe date provided is not a production date for the disc drive.\nWii disc drives have different revisions, and they all have different drive\ndates in their drive firmware for each revision.\nSwapping the disc drive does affect this date if the drive you swap\nit with is not the same revision.\n\nPlease ideally report any unknown drive revisions on the GitHub issues page.\n\n");
+
+	if (strncmp(drive_revision, "D4v2", 5) == 0) {
+		printf("You appear to have a D4v2 disc drive. These are in demand currently by Wiivolution. Please report this to us at %s if you would like to help us investigate the matters on these!", REPO_ISSUES_LINK);
+	}
 	
 	while(1) {
 
