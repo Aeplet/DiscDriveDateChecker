@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
 	printf("Press HOME (or START on GameCube Controller) to exit.\n\n");
 
 	char drivedate[11] = {0};
-	char drive_revision[DRIVE_REVISION_MAX_LENGTH];
+	char drive_revision[DRIVE_REVISION_MAX_LENGTH] = {0};
 	get_drive_date(drivedate);
 
 	if (drivedate[0]) {
